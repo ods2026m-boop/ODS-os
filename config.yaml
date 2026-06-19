@@ -28,6 +28,7 @@ mmdebstrap:
     - grub-efi-amd64-signed
     - grub-pc-bin
     - linux-image-generic
+    - linux-modules-extra-$(uname -r)
     - live-boot
     - live-boot-initramfs-tools
     - shim-signed
@@ -64,6 +65,7 @@ mmdebstrap:
     - ubuntu-keyring
     - xserver-xorg-core
     - xserver-xorg-video-qxl
+    - xserver-xorg-video-dummy
 
     # --- Development & Programming Languages ---
     - build-essential
@@ -118,11 +120,11 @@ mmdebstrap:
     - 'mkdir -p $1/etc/gdm3'
     - 'printf "[daemon]\nWaylandEnable=false\n" > $1/etc/gdm3/custom.conf'
 
-    # Mask annoying services in live environment (clean boot)
-    - 'chroot $1 systemctl mask speech-dispatcher.service || true'
-    - 'chroot $1 systemctl mask ubiquity.service || true'
-    - 'chroot $1 systemctl mask apt-daily.service || true'
-    - 'chroot $1 systemctl mask apt-daily-upgrade.service || true'
+    # Disable annoying services in live environment
+    - 'rm -f $1/etc/systemd/system/multi-user.target.wants/speech-dispatcher.service'
+    - 'rm -f $1/etc/systemd/system/multi-user.target.wants/ubiquity.service'
+    - 'rm -f $1/etc/systemd/system/multi-user.target.wants/apt-daily.service'
+    - 'rm -f $1/etc/systemd/system/multi-user.target.wants/apt-daily-upgrade.service'
 
     # Cleanup to reduce ISO size
     - 'chroot $1 apt-get clean'
