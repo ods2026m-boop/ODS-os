@@ -52,6 +52,7 @@ mmdebstrap:
     - apt
     - console-setup
     - dbus-x11
+    - fuse3
     - gvfs-backends
     - keyboard-configuration
     - locales
@@ -61,6 +62,8 @@ mmdebstrap:
     - sudo
     - tzdata
     - ubuntu-keyring
+    - xserver-xorg-core
+    - xserver-xorg-video-qxl
 
     # --- Development & Programming Languages ---
     - build-essential
@@ -109,7 +112,17 @@ mmdebstrap:
     # Prepare OOBE flag
     - 'mkdir -p $1/etc/skel'
     - 'touch $1/var/lib/oobe-user-created'
-    - 'echo "ODS-OS 26.04 LTS - GNOME/Wayland Edition" > $1/etc/issue'
+    - 'echo "ODS-OS 26.04 LTS - GNOME/X11 Edition" > $1/etc/issue'
+
+    # Disable Wayland in GDM (fix for QEMU and virtual machines)
+    - 'mkdir -p $1/etc/gdm3'
+    - 'printf "[daemon]\nWaylandEnable=false\n" > $1/etc/gdm3/custom.conf'
+
+    # Mask annoying services in live environment (clean boot)
+    - 'chroot $1 systemctl mask speech-dispatcher.service || true'
+    - 'chroot $1 systemctl mask ubiquity.service || true'
+    - 'chroot $1 systemctl mask apt-daily.service || true'
+    - 'chroot $1 systemctl mask apt-daily-upgrade.service || true'
 
     # Cleanup to reduce ISO size
     - 'chroot $1 apt-get clean'
