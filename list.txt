@@ -1,3 +1,4 @@
+/for Debspin list packages and Debspin source code:'https://github.com/jesse-dot/Debspin'/
 apt
 gnome-calendar
 gnome-calculator
