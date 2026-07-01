@@ -12,6 +12,7 @@ WORK_DIR="debspin-work"
 CHROOT_DIR="squash-edit"
 
 echo "[+] Creating new filesystem.squashfs..."
+# Convert the squash-edit directory into a new squashfs file
 sudo rm -f filesystem.squashfs
 sudo mksquashfs $CHROOT_DIR filesystem.squashfs -comp xz -b 1M -noappend -no-xattrs
 
